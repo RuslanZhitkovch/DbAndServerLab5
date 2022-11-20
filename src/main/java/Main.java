@@ -1,33 +1,45 @@
-
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+
+
+
+
+
 public class Main {
 
-    private static final String url = "jdbc:mysql://localhost:3306/db5lab";
-    private static final String user = "root";
-    private static final String password = "24101979";
+    public static void main(String args[]) throws SQLException {
+            DBConnect connect = new DBConnect();
+            String query = "select * from book";
 
-    private static Connection con;
-    private static Statement stmt;
-    private static ResultSet rs;
 
-    public static void main(String args[]) {
-        String username = "root";
-        String password = "24101979";
-        System.out.println("Connecting database...");
+        try {
 
-        try
+
+            
+            Statement statement = connect.getConnection().createStatement();
+            ResultSet resultSet = statement.executeQuery(query);
+
+            while(resultSet.next())
+            {
+                Book book = new Book();
+                book.setId(resultSet.getInt(1));
+                book.setTitle(resultSet.getString(2));
+                book.setAuthor(resultSet.getString(3));
+                book.setPrice(resultSet.getInt(4));
+                book.setAmount(resultSet.getInt(5));
+
+                System.out.println(book);
+
+            }
+
+
+        } catch (SQLException e)
         {
-            Connection connection = DriverManager.getConnection(url, username, password);
-            System.out.println("Database connected!");
-
-        } catch (SQLException e) {
-            throw new IllegalStateException("Cannot connect the database!", e);
+         e.printStackTrace();
         }
+
 
     }
 
